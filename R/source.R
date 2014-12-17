@@ -24,7 +24,7 @@ getEIA <- function(ID, key){
 
   doc <- xmlParse(file=url, isURL=TRUE)
 
-  df <- xmlToDataFrame(nodes = getNodeSet(doc, "//data/row"))
+  df <- xmlToDataFrame(nodes = XML::getNodeSet(doc, "//data/row"))
 
   df <- arrange(df, df$date)
   date <- as.Date(paste(as.character(levels(df[,1]))[df[,1]], "-12-31", sep=""), "%Y-%m-%d")
@@ -46,7 +46,7 @@ getEIA <- function(ID, key){
 
   doc <- xmlParse(file=url, isURL=TRUE)
 
-  df <- xmlToDataFrame(nodes = getNodeSet(doc, "//data/row"))
+  df <- xmlToDataFrame(nodes = XML::getNodeSet(doc, "//data/row"))
 
   df <- arrange(df, df$date)
 
@@ -69,7 +69,7 @@ getEIA <- function(ID, key){
 
   doc <- xmlParse(file=url, isURL=TRUE)
 
-  df <- xmlToDataFrame(nodes = getNodeSet(doc, "//data/row"))
+  df <- xmlToDataFrame(nodes = XML::getNodeSet(doc, "//data/row"))
 
   df <- arrange(df, df$date)
 
@@ -92,7 +92,7 @@ getEIA <- function(ID, key){
 
   doc <- xmlParse(file=url, isURL=TRUE)
 
-  df <- xmlToDataFrame(nodes = getNodeSet(doc, "//data/row"))
+  df <- xmlToDataFrame(nodes = XML::getNodeSet(doc, "//data/row"))
 
   df <- arrange(df, df$date)
 
@@ -118,13 +118,14 @@ getCatEIA <- function(key, cat=999999999){
 
   doc <- xmlParse(file=url, isURL=TRUE)
 
-  print("########Parent Category########")
-  tryCatch(print(xmlToDataFrame(nodes = getNodeSet(doc, "//category/parent_category_id"))), warning=function(w) FALSE, error=function(w) FALSE)
+  Parent_Category <- tryCatch(xmlToDataFrame(nodes = XML::getNodeSet(doc, "//category/parent_category_id")), warning=function(w) FALSE, error=function(w) FALSE)
 
-  print("########Sub-Categories########")
-  print(xmlToDataFrame(nodes = getNodeSet(doc, "//childcategories/row")))
-  
+  Sub_Categories <- xmlToDataFrame(nodes = XML::getNodeSet(doc, "//childcategories/row"))
 
-  print("########Series IDs########")
-  print(xmlToDataFrame(nodes = getNodeSet(doc, "///childseries/row")))
-       }
+  Series_IDs <- xmlToDataFrame(nodes = XML::getNodeSet(doc, "///childseries/row"))
+
+  Categories <- list(Parent_Category, Sub_Categories, Series_IDs)
+  names(Categories) <- c("Parent_Category", "Sub_Categories", "Series_IDs")
+
+  return(Categories)
+}
