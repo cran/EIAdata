@@ -11,7 +11,9 @@ getEIA <- function(ID, key){
             "M" = .getMonEIA(ID, key=key),
             "W" = .getWDEIA(ID, key=key),
             "D" = .getWDEIA(ID, key=key),
-            print("ERROR: The last character of your ID is not one of the possible sampling frequencies (A, Q, M, W, or D)"))
+            "H" = .getHEIA(ID, key=key),
+                   print("ERROR: The last character of your ID is not one of the possible sampling frequencies (A, Q, M, W, D, or H)"))
+
  }
         
 
@@ -102,6 +104,35 @@ getEIA <- function(ID, key){
   xts_data <- xts(values, order.by=date)
   names(xts_data) <- sapply(strsplit(ID, "-"), paste, collapse = ".")
 
+  temp <- assign(sapply(strsplit(ID, "-"), paste, collapse = "."), xts_data)
+  return(temp)
+}
+
+.getHEIA <- function(ID, key){
+  
+  ID <- unlist(strsplit(ID, ";"))
+  key <- unlist(strsplit(key, ";"))
+  
+  url <- paste("http://api.eia.gov/series?series_id=", ID, "&api_key=", key, "&out=xml", sep="" )
+  
+  doc <- xmlParse(file=url, isURL=TRUE)
+  
+  df <- xmlToDataFrame(nodes = XML::getNodeSet(doc, "//data/row"))
+  
+  df <- arrange(df, df$date)
+  
+  y <-str_sub(df[,1],1,4)
+  m <-str_sub(df[,1],5,6)
+  d <-str_sub(df[,1],7,8)
+  h <-str_sub(df[,1],10,11)
+  df[,1] <- ISOdatetime(y, m, d, h, 0, 0)
+  
+  date <- as.POSIXct(df$date)
+  values <- as.numeric(levels(df[,-1]))[df[,-1]]
+  
+  xts_data <- xts(values, order.by=date)
+  names(xts_data) <- sapply(strsplit(ID, "-"), paste, collapse = ".")
+  
   temp <- assign(sapply(strsplit(ID, "-"), paste, collapse = "."), xts_data)
   return(temp)
 }
