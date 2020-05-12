@@ -1,8 +1,8 @@
-ccd67a76097a97a58aca732e279b42ad *DESCRIPTION
+270e26f222c2205cfdf1817861fddd4c *DESCRIPTION
 5ef6276f4b65e93f6a126fcdd053fabb *NAMESPACE
-742ee076018c9f9e8863a3fddbc06f8d *R/source.R
+031e520d3d8fa66dfe4bbaafc8e8afe5 *R/source.R
 088eee2d3e381cd6f8e58b8c318aceac *R/wngsr.R
-5c33c6734cd671e72725b4f189efa450 *man/EIAdata-package.Rd
+66d2cf71f9da69f947f1be904847b9ba *man/EIAdata-package.Rd
 fc29a8abde207b98e920dd664ee0423d *man/getCatEIA.Rd
 a7f6b8577d9fded8f86748960ef788e3 *man/getEIA.Rd
 2add73f1d094c69b66a4829957863db1 *man/wngsr.Rd
